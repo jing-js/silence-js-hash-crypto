@@ -1,19 +1,22 @@
 'use strict';
 
-const SilenceJS = require('silence-js');
 const crypto = require('crypto');
-const BasePasswordHash = SilenceJS.BasePasswordHash;
 
-class CryptoPasswordHash extends BasePasswordHash {
+class CryptoPasswordHash {
   constructor(config) {
-    super();
+    this.logger = config.logger;
     this.algorithm = config.algorithm || 'sha256';
     this.iterations = config.iterations || 2048;
     this.saltBytesLength = config.saltBytesLength || 32;
     this.hashBytesLength = config.hashBytesLength || 32;
-    this._resolve('ready');
   }
-  *encode(password) {
+  init() {
+    return Promise.resolve();
+  }
+  close() {
+    return Promise.resolve();
+  }
+  encode(password) {
     let iters = this.iterations;
     let len = this.hashBytesLength;
     let algo = this.algorithm;
@@ -35,7 +38,7 @@ class CryptoPasswordHash extends BasePasswordHash {
       });
     });
   }
-  *verify(password, hash) {
+  verify(password, hash) {
     return new Promise(function(resolve, reject) {
       let keys = hash.split('$');
       if (keys.length !== 5) {
